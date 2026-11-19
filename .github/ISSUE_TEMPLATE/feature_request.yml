@@ -1,0 +1,35 @@
+name: "✨ Feature Request"
+description: "Propose an enhancement, optimization, or new capability for newminhh"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Target Area"
+      options:
+        - "ABI Wrapper / Syscall / Struct Coverage (newminhh/compat)"
+        - "JIT Translation & Caching Performance (newminhh/dbt)"
+        - "Static / Hybrid Binary Rewriting (newminhh/patcher)"
+        - "CLI / Build / Packaging (newminhh/newminhh)"
+        - "Verification & /proc/<pid>/smaps Benchmarking (newminhh/tests)"
+        - "VM Provisioning & Tooling (newminhh/vm_test_scripts)"
+        - "Documentation (newminhh/docs)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem or Motivation"
+      description: "What use case, bottleneck, or limitation does this feature address?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "Proposed Solution"
+      description: "Describe the technical design or interface you would like to see."
+    validations:
+      required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "📚 Documentation & Architecture Guide (newminhh/docs)"
+    url: https://github.com/newminhh/docs
+    about: "Read the system overview, kernel x32 requirements notice, ARCHITECTURE.md, and TESTING_AND_VM.md before filing an issue."
+  - name: "📜 Code of Conduct"
+    url: https://github.com/newminhh/docs/blob/main/CODE_OF_CONDUCT.md
+    about: "Review community standards for the newminhh project."

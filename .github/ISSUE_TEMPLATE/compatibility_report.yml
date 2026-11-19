@@ -1,0 +1,63 @@
+name: "📦 i386 Binary / Library Compatibility Report"
+description: "Report an unpatched i386 executable or .so shared library that needs an ABI wrapper, syscall, or opcode"
+title: "[Compat]: "
+labels: ["compatibility"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when running an unmodified 32-bit `i386` (`ELFCLASS32`, `EM_386`) executable or `.so` shared library on `x32` hits an unsupported symbol, syscall number, instruction opcode, or struct layout.
+
+  - type: input
+    id: binary_name
+    attributes:
+      label: "Target i386 Application or Shared Library (.so)"
+      description: "Name and version of the i386 executable or shared library."
+      placeholder: "e.g., libfoo.so.1.2 (i386) or legacy_cli_tool v2.4"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: binary_traits
+    attributes:
+      label: "Guest ELF32 Characteristics"
+      description: "Check all properties that apply to the input i386 binary (`file` / `readelf -h -d`):"
+      options:
+        - label: "Position-Independent Executable / Shared Object (`ET_DYN`)"
+        - label: "Fixed-Address Executable (`ET_EXEC`, e.g., `0x08048000`)"
+        - label: "Stripped (no `.symtab`)"
+        - label: "Uses `%gs:` Thread-Local Storage (`PT_TLS`)"
+        - label: "Uses `dlopen` / `dlsym` dynamically at runtime"
+        - label: "Uses raw `int 0x80` or `sysenter` syscalls"
+
+  - type: dropdown
+    id: failure_category
+    attributes:
+      label: "Missing Compatibility Surface"
+      options:
+        - "Missing libc / libm / libpthread symbol wrapper in libnewminhh_compat.so"
+        - "Unsupported i386 syscall number in newminhh_compat_syscall"
+        - "Unsupported i386 instruction opcode in libnewminhh_dbt.so or newminhh-patch"
+        - "32-bit vs x32 64-bit struct layout / ioctl / fcntl repacking needed"
+        - "Other / Unknown"
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_message
+    attributes:
+      label: "Exact [newminhh:*] Error Message"
+      description: "Paste the `[newminhh:wrappers]`, `[newminhh:syscall]`, `[newminhh:dbt]`, or `[newminhh:patcher]` diagnostic line."
+      placeholder: "[newminhh:wrappers] ERROR: unsupported symbol '...' (no i386<->x32 ABI wrapper)"
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra_context
+    attributes:
+      label: "Output of `readelf -d` / `nm -D` or Reproduction Notes"
+      description: "List the imported `UND` symbols or instructions needed."
+      render: text
+    validations:
+      required: false

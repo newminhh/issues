@@ -1,0 +1,86 @@
+name: "🐛 Bug Report"
+description: "Report a crash, miscompilation, ABI mismatch, memory leak, or build failure in newminhh"
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug in **`newminhh`** (`新明`). Please fill out the sections below so we can reproduce and fix the issue quickly.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: "Affected Component / Repository"
+      description: "Which repository or subsystem is affected?"
+      multiple: false
+      options:
+        - "newminhh/compat (libnewminhh_compat.so — ABI bridge, syscalls, structs, dlopen/dlsym, wrappers)"
+        - "newminhh/dbt (libnewminhh_dbt.so / newminhh-run — ELF32 loader, Capstone JIT, NX-guard)"
+        - "newminhh/patcher (newminhh-patch / re_patcher — static & hybrid ELF32 rewriter)"
+        - "newminhh/common (newminhh_abi.h / newminhh_log.h)"
+        - "newminhh/newminhh (bin/newminhh CLI / top-level Makefile)"
+        - "newminhh/tests (Parts 1–5 corpus, test suites, bench_smaps.py)"
+        - "newminhh/vm_test_scripts (Debian x32 libvirt/KVM scripts)"
+        - "newminhh/docs (Documentation)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: execution_mode
+    attributes:
+      label: "Execution Mode"
+      description: "How was the guest i386 binary or library executed?"
+      options:
+        - "newminhh-run (In-Process Runtime DBT)"
+        - "newminhh-patch — auto mode (Static rewrite with selective DBT fallback)"
+        - "newminhh-patch --no-hybrid-fallback (Pure static rewrite)"
+        - "newminhh-patch --hybrid-fallback (Forced hybrid fallback)"
+        - "Host x32 driver loading i386 .so via compat_dlopen / newminhh_dbt_dlopen"
+        - "Build / Provisioning / Test Harness (N/A)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "A clear and concise description of what went wrong versus what was expected."
+      placeholder: "Describe the bug, expected behavior, and actual behavior..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Exact commands or minimal C/ASM test case to reproduce the failure."
+      placeholder: |
+        1. Compile i386 binary with `gcc -m32 ...`
+        2. Run `NEWMINHH_DEBUG=1 newminhh run ./my_i386_bin`
+        3. Observe failure...
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Diagnostic Output (NEWMINHH_DEBUG=1)"
+      description: "Paste stderr output with `NEWMINHH_DEBUG=1`, exit code, and `readelf -h -l -d` summary of the guest ELF."
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: "Target x32 Kernel & Environment"
+      description: "Output of `uname -a`, `dpkg --print-architecture`, and `/proc/cmdline` (`syscall.x32=y ia32_emulation=0`)."
+      value: |
+        - Kernel (`uname -r`): 
+        - Architecture (`dpkg --print-architecture`): x32
+        - Kernel cmdline (`/proc/cmdline`): syscall.x32=y ia32_emulation=0
+        - Commit SHA (`git rev-parse --short HEAD`): 
+    validations:
+      required: true
